@@ -1,0 +1,101 @@
+#include <Servo.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+// OLED Configuration
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+// Servo Motors
+Servo leg1, leg2, leg3, leg4;
+
+// Bluetooth
+#include <SoftwareSerial.h>
+SoftwareSerial BTSerial(2, 3); // RX, TX for HC-05
+
+// Emojis
+const char* emojis[] = {
+  ":)", ":(", ":D", ";)", ":P", "XD", ":|", ":O"
+};
+int emojiIndex = 0;
+
+void setup() {
+  // Initialize Serial and Bluetooth
+  Serial.begin(9600);
+  BTSerial.begin(9600);
+
+  // Initialize OLED
+  if (!display.begin(SSD1306_I2C_ADDRESS, 0x3C)) {
+    Serial.println("SSD1306 allocation failed");
+    for (;;);
+  }
+  display.clearDisplay();
+
+  // Initialize Servos
+  leg1.attach(4);
+  leg2.attach(5);
+  leg3.attach(6);
+  leg4.attach(7);
+
+  // Default positions
+  resetLegs();
+
+  // Display initial emoji
+  displayEmoji(emojis[emojiIndex]);
+}
+
+void loop() {
+  if (BTSerial.available()) {
+    char command = BTSerial.read();
+    handleCommand(command);
+  }
+}
+
+void handleCommand(char command) {
+  switch (command) {
+    case 'F': moveForward(); break;
+    case 'B': moveBackward(); break;
+    case 'L': turnLeft(); break;
+    case 'R': turnRight(); break;
+    case 'E': nextEmoji(); break;
+    default: break;
+  }
+}
+
+void moveForward() {
+  // Implement forward walking logic
+}
+
+void moveBackward() {
+  // Implement backward walking logic
+}
+
+void turnLeft() {
+  // Implement left turn logic
+}
+
+void turnRight() {
+  // Implement right turn logic
+}
+
+void nextEmoji() {
+  emojiIndex = (emojiIndex + 1) % (sizeof(emojis) / sizeof(emojis[0]));
+  displayEmoji(emojis[emojiIndex]);
+}
+
+void displayEmoji(const char* emoji) {
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 20);
+  display.print(emoji);
+  display.display();
+}
+
+void resetLegs() {
+  leg1.write(90);
+  leg2.write(90);
+  leg3.write(90);
+  leg4.write(90);
+}
