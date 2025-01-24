@@ -12,16 +12,6 @@ A fun and interactive project for building a 4-legged robot that displays random
 
 ---
 
-## Repository Structure
-```
-4_Legged_Emoji_Bot/
-├── firmware/           # Arduino code for robot control
-├── app/                # Mobile app code (e.g., MIT App Inventor or Flutter)
-└── assets/             # Emoji sets for the OLED screen
-```
-
----
-
 ## Getting Started
 
 ### Prerequisites
